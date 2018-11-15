@@ -347,6 +347,11 @@ class Client {
         if(strlen($byte) > 0) {
             $cmd = ord($byte);
             $bytes = ord($this->readBytes(1,true));
+            
+            if($bytes & 0x80) {
+                $bytes = $bytes & 0x7F; // Mask MSB
+                $bytes += (ord($this->readBytes(1,true)) & 0x7F) * 128;
+            }
 
             $payload = "";
             if($bytes>0)
